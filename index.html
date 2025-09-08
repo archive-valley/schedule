@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARCHIVE.VALLEY</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Base styling for the app */
+        body {
+            font-family: 'Inter', 'SF Pro Text', 'Helvetica Neue', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* --- Custom Styles for iOS Camera UI --- */
+        /* Style for the active menu item */
+        .service-menu-item.active {
+            color: #facc15; /* yellow-400 */
+        }
+
+        /* Hide scrollbar but allow scrolling */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+        
+        /* Transition for the content fade */
+        .content-panel {
+            transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
+        }
+
+        /* Animation classes */
+        .fade-in {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .fade-out {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        /* Shutter button style */
+        .shutter-button {
+            border: 4px solid white;
+            transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .shutter-button:active {
+            transform: scale(0.9);
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body class="bg-black flex items-center justify-center min-h-screen overflow-hidden">
+
+    <!-- Mobile Screen Mockup -->
+    <div class="w-full max-w-sm h-[800px] max-h-[90vh] bg-black rounded-[40px] shadow-2xl shadow-gray-800/20 border-4 border-gray-800 flex flex-col overflow-hidden relative">
+
+        <!-- Header -->
+        <div class="absolute top-0 left-0 right-0 h-10 px-6 flex justify-between items-center text-white z-20">
+            <!-- Top Left: Time -->
+            <span id="status-time" class="font-semibold text-sm">3:05 PM</span>
+
+            <!-- Top Right: Status Icons -->
+            <div class="flex items-center space-x-2">
+                <!-- Cellular Signal -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-reception-4" viewBox="0 0 16 16">
+                    <path d="M0 11.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2zM4 9.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-4zm4-2.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-7zm4-3a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v10a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-10z"/>
+                </svg>
+                <!-- NEW: Battery Level - End cap removed for a cleaner look -->
+                <div class="flex items-center space-x-1">
+                    <span class="font-semibold text-sm leading-none">35%</span>
+                    <div class="w-6 h-3 border-2 border-gray-300 rounded-[4px] p-0.5">
+                       <div class="bg-white h-full rounded-[2px]" style="width: 35%;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content "Viewport" -->
+        <div id="viewport" class="flex-grow flex items-center justify-center bg-cover bg-center bg-no-repeat transition-all duration-500 ease-in-out" style="background-image: url('https://placehold.co/600x800/000000/FFFFFF?text=A.V');">
+            <!-- Service content will be injected here -->
+        </div>
+
+
+        <!-- Bottom Controls -->
+        <div class="bg-black/80 backdrop-blur-md pt-5 pb-8 text-white z-10">
+            <!-- Service switcher menu -->
+            <div class="overflow-x-auto no-scrollbar mb-8">
+                <div id="service-menu" class="flex justify-center items-center space-x-6 text-gray-400 font-medium text-sm w-max mx-auto px-6">
+                    <button class="service-menu-item" data-service="design">DESIGN</button>
+                    <button class="service-menu-item" data-service="video">VIDEO</button>
+                    <button class="service-menu-item" data-service="photo">PHOTO</button>
+                    <button class="service-menu-item" data-service="code">CODE</button>
+                </div>
+            </div>
+
+            <!-- Shutter button and preview -->
+            <div class="flex items-center justify-around px-4">
+                <div id="gallery-preview" class="w-16 h-16 rounded-lg bg-gray-800 border-2 border-gray-600 bg-cover bg-center transition-all duration-300">
+                </div>
+                
+                <a href="https://calendly.com/" target="_blank" rel="noopener noreferrer" class="shutter-button w-20 h-20 bg-white rounded-full flex items-center justify-center group">
+                    <span class="text-black font-bold text-sm tracking-wider uppercase group-active:opacity-70">Book</span>
+                </a>
+
+                <button class="w-16 h-16 flex items-center justify-center text-gray-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" class="bi bi-arrow-repeat" viewBox="0 0 16 16">
+                        <path d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z"/>
+                        <path fill-rule="evenodd" d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.5A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.5A5.002 5.002 0 0 0 3.1 9z"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const serviceMenu = document.getElementById('service-menu');
+            const menuItems = document.querySelectorAll('.service-menu-item');
+            const viewport = document.getElementById('viewport');
+            const galleryPreview = document.getElementById('gallery-preview');
+            const timeElement = document.getElementById('status-time');
+
+            const services = {
+                photo: {
+                    title: 'PHOTOGRAPHY',
+                    description: 'Digital & film photography. Portraits, editorial, product, and events. We capture the ephemeral, pixel by pixel.',
+                    bgImage: 'https://placehold.co/600x800/1a1a1a/FFFFFF?text=PHOTO',
+                    previewImage: 'https://placehold.co/128x128/1a1a1a/FFFFFF?text=P'
+                },
+                video: {
+                    title: 'CAMERA OPERATOR',
+                    description: 'Camera operation & cinematography. Music videos, short films, and digital content. Motion as memory.',
+                    bgImage: 'https://placehold.co/600x800/1a1a1a/FFFFFF?text=VIDEO',
+                    previewImage: 'https://placehold.co/128x128/1a1a1a/FFFFFF?text=V'
+                },
+                design: {
+                    title: 'GRAPHIC DESIGN',
+                    description: 'Graphic design for digital and print. Branding, posters, and UI/UX. Visual systems for the new age.',
+                    bgImage: 'https://placehold.co/600x800/1a1a1a/FFFFFF?text=DESIGN',
+                    previewImage: 'https://placehold.co/128x128/1a1a1a/FFFFFF?text=D'
+                },
+                code: {
+                    title: 'SITE & TOOL CREATION',
+                    description: 'Custom websites and digital tools. Interactive experiences and functional art. We build the interfaces of the future.',
+                    bgImage: 'https://placehold.co/600x800/1a1a1a/FFFFFF?text=CODE',
+                    previewImage: 'https://placehold.co/128x128/1a1a1a/FFFFFF?text=C'
+                }
+            };
+
+            function centerMenuItem(menuItem) {
+                const menuContainer = serviceMenu.parentElement;
+                const scrollLeft = menuItem.offsetLeft - (menuContainer.offsetWidth / 2) + (menuItem.offsetWidth / 2);
+                menuContainer.scrollTo({
+                    left: scrollLeft,
+                    behavior: 'smooth'
+                });
+            }
+
+            function updateContent(serviceKey) {
+                const service = services[serviceKey];
+                if (!service) return;
+
+                const activeItem = document.querySelector(`.service-menu-item[data-service="${serviceKey}"]`);
+                
+                menuItems.forEach(item => {
+                    item.classList.toggle('active', item.dataset.service === serviceKey);
+                });
+                if(activeItem) centerMenuItem(activeItem);
+
+                galleryPreview.style.backgroundImage = `url('${service.previewImage}')`;
+
+                const currentPanel = viewport.querySelector('.content-panel');
+                if (currentPanel) {
+                    currentPanel.classList.remove('fade-in');
+                    currentPanel.classList.add('fade-out');
+                }
+                
+                setTimeout(() => {
+                    viewport.innerHTML = ''; 
+                    viewport.style.backgroundImage = `url('${service.bgImage}')`;
+                    
+                    const newPanel = document.createElement('div');
+                    newPanel.className = 'content-panel fade-out bg-black/50 backdrop-blur-sm p-8 rounded-lg text-center text-white max-w-xs mx-auto';
+                    newPanel.innerHTML = `
+                        <h2 class="text-2xl font-bold tracking-wider uppercase text-yellow-400 mb-3">${service.title}</h2>
+                        <p class="text-base leading-relaxed text-gray-200">${service.description}</p>
+                    `;
+                    viewport.appendChild(newPanel);
+
+                    void newPanel.offsetWidth; 
+                    
+                    newPanel.classList.remove('fade-out');
+                    newPanel.classList.add('fade-in');
+
+                }, 200); 
+            }
+
+            function updateTime() {
+                const now = new Date();
+                let hours = now.getHours();
+                const minutes = now.getMinutes().toString().padStart(2, '0');
+                const ampm = hours >= 12 ? 'PM' : 'AM';
+                hours = hours % 12;
+                hours = hours ? hours : 12; // the hour '0' should be '12'
+                timeElement.textContent = `${hours}:${minutes} ${ampm}`;
+            }
+
+            serviceMenu.addEventListener('click', (e) => {
+                if (e.target.classList.contains('service-menu-item')) {
+                    const serviceKey = e.target.dataset.service;
+                    updateContent(serviceKey);
+                }
+            });
+
+            // --- Initial Load ---
+            const initialService = 'photo';
+            updateContent(initialService);
+            updateTime();
+            setInterval(updateTime, 30000); // Update time every 30 seconds
+        });
+    </script>
+</body>
+</html>
+
