@@ -60,7 +60,6 @@
 </head>
 <body class="bg-black flex items-center justify-center min-h-screen overflow-hidden">
 
-    <!-- NEW: Wrapper for a more subtle optical centering. -->
     <div class="w-full h-full flex items-center justify-center" style="padding-bottom: 2.5vh;">
         <!-- Mobile Screen Mockup -->
         <div class="h-[87vh] aspect-[9/19.5] max-w-full bg-black rounded-[40px] shadow-2xl shadow-gray-800/20 border-4 border-gray-800 flex flex-col overflow-hidden relative">
@@ -202,7 +201,8 @@
                     viewport.style.backgroundImage = `url('${service.bgImage}')`;
                     
                     const newPanel = document.createElement('div');
-                    newPanel.className = 'content-panel fade-out bg-black/50 backdrop-blur-sm p-8 rounded-lg text-center text-white max-w-xs mx-auto';
+                    // NEW: Shrunk the description container for a more compact look
+                    newPanel.className = 'content-panel fade-out bg-black/50 backdrop-blur-sm p-6 rounded-lg text-center text-white max-w-[16rem] mx-auto';
                     newPanel.innerHTML = `
                         <h2 class="text-2xl font-bold tracking-wider uppercase text-yellow-400 mb-3">${service.title}</h2>
                         <p class="text-base leading-relaxed text-gray-200">${service.description}</p>
