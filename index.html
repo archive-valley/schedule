@@ -59,11 +59,12 @@
     </style>
 </head>
 <body class="bg-black flex items-center justify-center min-h-screen overflow-hidden">
-    <!-- NEW: Wrapper for optical centering -->
-    <div class="w-full flex items-center justify-center p-2 sm:p-4" style="padding-bottom: 5vh;">
+
+    <!-- NEW: Wrapper for optical centering. Padding pushes the container up. -->
+    <div class="w-full h-full flex items-center justify-center" style="padding-bottom: 5vh;">
         <!-- Mobile Screen Mockup -->
-        <!-- NEW: Using aspect ratio to maintain shape and prevent cutoff -->
-        <div class="w-full max-w-sm aspect-[9/19.5] bg-black rounded-[40px] shadow-2xl shadow-gray-800/20 border-4 border-gray-800 flex flex-col overflow-hidden relative">
+        <!-- NEW: Height is slightly reduced to ensure it fits on all screens. -->
+        <div class="h-[87vh] aspect-[9/19.5] max-w-full bg-black rounded-[40px] shadow-2xl shadow-gray-800/20 border-4 border-gray-800 flex flex-col overflow-hidden relative">
 
             <!-- Header -->
             <div class="absolute top-0 left-0 right-0 h-10 px-6 flex justify-between items-center text-white z-20">
